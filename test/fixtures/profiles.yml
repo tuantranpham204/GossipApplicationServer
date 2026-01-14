@@ -1,0 +1,27 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: one
+  fullname: MyString
+  bio: MyString
+  gender: 1
+  relationship_status: 1
+  status: 1
+  avatar_data: 
+  allow_direct_follows: false
+  is_email_public: false
+  is_gender_public: false
+  is_rel_status_public: false
+
+two:
+  user: two
+  fullname: MyString
+  bio: MyString
+  gender: 1
+  relationship_status: 1
+  status: 1
+  avatar_data: 
+  allow_direct_follows: false
+  is_email_public: false
+  is_gender_public: false
+  is_rel_status_public: false
