@@ -37,6 +37,7 @@ gem 'kaminari'      # Pagination for Active Record
 gem 'polymorphic_integer_type' # Maps integer column to model class names
 
 # --- API DOCUMENTATION (Swagger/OpenAPI) ---
+gem 'rspec-rails'
 gem 'rswag-api'
 gem 'rswag-ui'
 gem 'rswag-specs'

@@ -10,29 +10,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_01_14_020443) do
+ActiveRecord::Schema[8.1].define(version: 2026_01_14_030016) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
-
-  create_table "follows", primary_key: ["requester_id", "receiver_id"], force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.bigint "receiver_id", null: false
-    t.bigint "requester_id", null: false
-    t.integer "status", null: false
-    t.datetime "updated_at", null: false
-    t.index ["receiver_id"], name: "index_follows_on_receiver_id"
-    t.index ["requester_id"], name: "index_follows_on_requester_id"
-  end
-
-  create_table "friendships", primary_key: ["requester_id", "receiver_id"], force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.bigint "receiver_id", null: false
-    t.bigint "requester_id", null: false
-    t.integer "status"
-    t.datetime "updated_at", null: false
-    t.index ["receiver_id"], name: "index_friendships_on_receiver_id"
-    t.index ["requester_id"], name: "index_friendships_on_requester_id"
-  end
 
   create_table "messages", force: :cascade do |t|
     t.jsonb "attachment_data"
@@ -121,6 +101,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_14_020443) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "user_relations", primary_key: ["requester_id", "receiver_id"], force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.bigint "receiver_id", null: false
+    t.integer "relation_type", null: false
+    t.bigint "requester_id", null: false
+    t.integer "status", null: false
+    t.datetime "updated_at", null: false
+    t.index ["receiver_id"], name: "index_user_relations_on_receiver_id"
+    t.index ["requester_id"], name: "index_user_relations_on_requester_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "confirmation_token"
     t.datetime "confirmed_at"
@@ -134,10 +125,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_14_020443) do
     t.index ["username"], name: "index_users_on_username"
   end
 
-  add_foreign_key "follows", "users", column: "receiver_id"
-  add_foreign_key "follows", "users", column: "requester_id"
-  add_foreign_key "friendships", "users", column: "receiver_id"
-  add_foreign_key "friendships", "users", column: "requester_id"
   add_foreign_key "messages", "rooms"
   add_foreign_key "messages", "users", column: "sender_id"
   add_foreign_key "notifications", "users", column: "actor_id"
@@ -147,4 +134,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_14_020443) do
   add_foreign_key "profiles", "users", on_delete: :cascade
   add_foreign_key "requests", "users", column: "receiver_id"
   add_foreign_key "requests", "users", column: "sender_id"
+  add_foreign_key "user_relations", "users", column: "receiver_id"
+  add_foreign_key "user_relations", "users", column: "requester_id"
 end
