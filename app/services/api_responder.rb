@@ -5,20 +5,20 @@ module ApiResponder
 
   private
 
-  def json_success(data: nil, message: 'Success', status: :ok)
+  def json_success(data: nil, message: "Success", status: :ok)
     render json: {
       code: Rack::Utils.status_code(status),
-      status: 'success',
+      status: "success",
       message: message,
       data: data,
       errors: nil
     }, status: status
   end
 
-  def json_error(message: 'Error', status: :bad_request, errors: nil)
+  def json_error(message: "Error", status: :bad_request, errors: nil)
     render json: {
       code: Rack::Utils.status_code(status),
-      status: 'error',
+      status: "error",
       message: message,
       data: nil,
       errors: errors

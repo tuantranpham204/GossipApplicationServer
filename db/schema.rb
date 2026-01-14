@@ -86,13 +86,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_14_030016) do
     t.index ["role_name"], name: "index_roles_on_role_name"
   end
 
-  create_table "roles_users", id: false, force: :cascade do |t|
-    t.bigint "role_id", null: false
-    t.bigint "user_id", null: false
-    t.index ["role_id", "user_id"], name: "index_roles_users_on_role_id_and_user_id"
-    t.index ["user_id", "role_id"], name: "pk_user_roles", unique: true
-  end
-
   create_table "rooms", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.jsonb "metadata"
@@ -110,6 +103,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_14_030016) do
     t.datetime "updated_at", null: false
     t.index ["receiver_id"], name: "index_user_relations_on_receiver_id"
     t.index ["requester_id"], name: "index_user_relations_on_requester_id"
+  end
+
+  create_table "user_role", primary_key: ["user_id", "role_id"], force: :cascade do |t|
+    t.bigint "role_id", null: false
+    t.bigint "user_id", null: false
+    t.index ["role_id", "user_id"], name: "index_user_role_on_role_id_and_user_id"
+    t.index ["role_id"], name: "index_user_role_on_role_id"
+    t.index ["user_id", "role_id"], name: "pk_user_roles", unique: true
+    t.index ["user_id"], name: "index_user_role_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -136,4 +138,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_14_030016) do
   add_foreign_key "requests", "users", column: "sender_id"
   add_foreign_key "user_relations", "users", column: "receiver_id"
   add_foreign_key "user_relations", "users", column: "requester_id"
+  add_foreign_key "user_role", "roles"
+  add_foreign_key "user_role", "users"
 end
