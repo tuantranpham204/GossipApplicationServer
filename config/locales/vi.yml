@@ -1,0 +1,13 @@
+
+vi:
+  hello: "Chào em"
+
+  errors:
+    internal_server_error: "Lỗi Máy chủ"
+    internal_server_error_debug: "Lỗi máy chủ: %{error_details}"
+    bad_request: "Yêu cầu không hợp lệ"
+
+    unauthorized: "Chưa xác thực"
+    token_expired: "Token đã hết hạn"
+
+    resource_not_found: "%{resource.name} với thuộc tính %{resource.attribute} không tồn tại  giá trị %{resource.value}."
