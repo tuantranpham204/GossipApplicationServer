@@ -1,13 +1,24 @@
 en:
   hello: "Hello world"
 
-  errors:
-    internal_server_error: "Internal Server Error"
-    internal_server_error_debug: "Internal Server Error: %{error_details}"
-    bad_request: "Bad Request"
+  messages:
+    locale_updated: "Language changed successfully."
 
-    unauthorized: "Unauthorized"
-    token_expired: "Token has expired"
+
+  errors:
+    internal_server_error: "Internal Server Error."
+    internal_server_error_debug: "Internal Server Error: %{error_details}."
+    bad_request: "Bad Request."
+
+    unauthorized: "Unauthorized."
+    token_expired: "Token has expired."
+    username_used: "%{username} is already used. Please choose another one."
 
     resource_not_found: "%{resource.name} with the attribute %{resource.attribute} has value %{resource.value} was not found"
 
+    missing_param: "%{param} has not been entered."
+
+  validation:
+    invalid_email: " is not a valid email."
+    invalid_language: " is not a valid language."
+    password_complexity: " must include at least one uppercase letter, one lowercase letter, and one digit."

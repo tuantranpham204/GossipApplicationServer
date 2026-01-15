@@ -18,17 +18,16 @@ RSpec.configure do |config|
     'v1/swagger.yaml' => {
       openapi: '3.0.1',
       info: {
-        title: 'API V1',
+        title: 'API Documentation',
         version: 'v1'
       },
       paths: {},
       servers: [
         {
-          # Use the ENV variable, default to localhost:3000 if not set
           url: ENV.fetch('SWAGGER_HOST', 'http://localhost:3000'),
           description: 'API Server'
         }
-      ],
+      ]
     }
   }
 

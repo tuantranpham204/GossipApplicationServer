@@ -24,7 +24,7 @@ Devise.setup do |config|
   # Configure the e-mail address which will be shown in Devise::Mailer,
   # note that it will be overwritten if you use your own mailer class
   # with default "from" parameter.
-  config.mailer_sender = 'please-change-me-at-config-initializers-devise@example.com'
+  config.mailer_sender = "please-change-me-at-config-initializers-devise@example.com"
 
   # Configure the class responsible to send e-mails.
   # config.mailer = 'Devise::Mailer'
@@ -36,7 +36,7 @@ Devise.setup do |config|
   # Load and configure the ORM. Supports :active_record (default) and
   # :mongoid (bson_ext recommended) by default. Other ORMs may be
   # available as additional gems.
-  require 'devise/orm/active_record'
+  require "devise/orm/active_record"
 
   # ==> Configuration for any authentication mechanism
   # Configure which keys are used when authenticating a user. The default is
@@ -282,7 +282,7 @@ Devise.setup do |config|
   #   manager.default_strategies(scope: :user).unshift :some_external_strategy
   # end
 
-  # -- USE JSON RESPONDER TO WRAP ERROR RESPONSE __
+  # ==> USE JSON RESPONDER TO WRAP ERROR RESPONSE
   config.warden do |manager|
     manager.failure_app = CustomDeviseFailureApp
   end
@@ -315,4 +315,27 @@ Devise.setup do |config|
   # When set to false, does not sign a user in automatically after their password is
   # changed. Defaults to true, so a user is signed in automatically after changing a password.
   # config.sign_in_after_change_password = true
+
+  # ==> Configuration for JWT
+
+  api_prefix = ENV.fetch("API_V1_URL", "/api/v1")
+  config.jwt do |jwt|
+    jwt.secret = ENV.fetch("SYSTEM_JWT_SECRET") || Rails.application.credentials.secret_key_base
+
+    # Dispatch Requests (When to ENCODE/Creation)
+    # "Create a token for these requests"
+    jwt.dispatch_requests = [
+      [ "POST", %r{^#{api_prefix}/sign_in$} ],
+      [ "POST", %r{^#{api_prefix}/sign_up$} ]
+    ]
+
+    # Revocation Requests (When to INVALIDATE)
+    # "Invalidate the token for these requests"
+    jwt.revocation_requests = [
+      [ "DELETE", %r{^#{api_prefix}/sign_out$} ]
+    ]
+
+    jwt.expiration_time = 1.day.to_i
+  end
+
 end

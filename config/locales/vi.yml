@@ -1,13 +1,25 @@
 
 vi:
-  hello: "Chào em"
+  hello: "Chào em cô gái Lam Hồng"
+  vi:
+    messages:
+      locale_updated: "Ngôn ngữ đã được thay đổi thành công"
 
   errors:
     internal_server_error: "Lỗi Máy chủ"
     internal_server_error_debug: "Lỗi máy chủ: %{error_details}"
-    bad_request: "Yêu cầu không hợp lệ"
+    bad_request: "Yêu cầu đéo hợp lệ."
 
     unauthorized: "Chưa xác thực"
-    token_expired: "Token đã hết hạn"
+    token_expired: "Token đã hết hạn."
+    username_used: "%{username} đã được sử dụng. Vui lòng chọn tên khác."
+
 
     resource_not_found: "%{resource.name} với thuộc tính %{resource.attribute} không tồn tại  giá trị %{resource.value}."
+
+    missing_param: "%{param} chưa được nhập liệu."
+
+  validation:
+    invalid_email: " đéo phải 1 email hợp lệ."
+    invalid_language: " đéo phải 1 ngôn ngữ hợp lệ."
+    password_complexity: " phải có ít nhất 1 chữ cái viết hoa, 1 chữ cái viết thường, và 1 số."

@@ -33,9 +33,11 @@ module GossipApplication
     config.i18n.available_locales = [:en, :vi]
 
     # 2. Set default locale
-    config.i18n.default_locale = :vi
+    config.i18n.default_locale = :en
 
     # 3. (Optional) Raise error if translation is missing (great for dev)
     config.i18n.fallbacks = true
+
+
   end
 end
