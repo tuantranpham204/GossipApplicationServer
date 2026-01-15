@@ -12,7 +12,7 @@ module ErrorCode
   # Auth Errors
   UNAUTHORIZED = { code: 401, message: "errors.unauthorized", status: :unauthorized }
   TOKEN_EXPIRED = { code: 401, message: "errors.token_expired", status: :unauthorized }
-
+  USERNAME_USED = { code: 400, message: "errors.username_used", status: :bad_request }
 
 
 
