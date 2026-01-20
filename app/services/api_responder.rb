@@ -1,9 +1,6 @@
 # frozen_string_literal: true
 
 module ApiResponder
-  extend ActiveSupport::Concern
-
-  private
 
   def json_success(data: nil, message: "Success", status: :ok)
     render json: {

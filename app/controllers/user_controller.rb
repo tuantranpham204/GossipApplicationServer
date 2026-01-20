@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class UserController< ApplicationController
+class UserController < ApplicationController
   before_action :authenticate_user! # Ensure they are logged in
 
   # PATCH /api/v1/users/me
@@ -18,14 +18,11 @@ class UserController< ApplicationController
 
       json_success(
         data: UserSerializer.new(current_user), # We will build this next!
-        message: I18n.t('messages.user_updated')
+        message: I18n.t("messages.resource_updated",
+                        resource: { name: I18n.t("models.user.user"), attribute: I18n.t("models.user.attribute.language"), value: current_user.locale } )
       )
     else
-      json_error(
-        message: I18n.t('errors.messages.validation_error'),
-        status: :unprocessable_entity,
-        errors: current_user.errors.as_json
-      )
+      raise AppError.new(ErrorCode::VALIDATION_ERROR, params: { details: current_user.errors.to_s || "" })
     end
   end
 end

@@ -1,9 +1,23 @@
 en:
   hello: "Hello world"
 
-  messages:
-    locale_updated: "Language changed successfully."
+  locale:
+    en: "English"
+    vi: "Vietnamese"
 
+
+  models:
+    user:
+      user: "user"
+      User: "User"
+      attribute:
+        language: "language"
+
+  messages:
+    resource_updated: "%{resource.name} has %{resource.attribute} of %{resource.value} updated successfully."
+    sign_in_ok: "%{username} has signed in successfully."
+    sign_out_ok: "%{username} has signed out successfully."
+    sign_up_ok: "%{username} has signed up successfully."
 
   errors:
     internal_server_error: "Internal Server Error."
@@ -11,14 +25,23 @@ en:
     bad_request: "Bad Request."
 
     unauthorized: "Unauthorized."
+
     token_expired: "Token has expired."
     username_used: "%{username} is already used. Please choose another one."
 
     resource_not_found: "%{resource.name} with the attribute %{resource.attribute} has value %{resource.value} was not found"
+    cannot_create_resource: "Cannot create %{resource.name}."
 
     missing_param: "%{param} has not been entered."
 
+    user_inactive: "User is inactive."
+
   validation:
+    validation_error: "Validation Error: %{details}"
+    sign_in_failed: "Username or password is invalid"
+
+    input_username_again: "%{username} is invalid. Please enter again."
+
     invalid_email: " is not a valid email."
     invalid_language: " is not a valid language."
     password_complexity: " must include at least one uppercase letter, one lowercase letter, and one digit."

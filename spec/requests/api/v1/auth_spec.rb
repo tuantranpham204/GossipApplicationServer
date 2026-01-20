@@ -5,7 +5,7 @@ RSpec.describe 'api/v1/users', type: :request do
   # Grouping: This creates a folder in the UI called "Authentication"
   path '/api/v1/users/sign_in' do
 
-    post('Login User') do
+    post('Sign In') do
       tags 'Authentication' # <--- This groups it in the UI
       consumes 'application/json'
       produces 'application/json'
@@ -17,10 +17,10 @@ RSpec.describe 'api/v1/users', type: :request do
           user: {
             type: :object,
             properties: {
-              email: { type: :string },
+              email_or_username: { type: :string },
               password: { type: :string }
             },
-            required: %w[email password]
+            required: %w[email_or_username password]
           }
         }
       }
@@ -46,7 +46,7 @@ RSpec.describe 'api/v1/users', type: :request do
 
   path '/api/v1/users/sign_up' do
 
-    post('Register User') do
+    post('Sign Up') do
       tags 'Authentication'
       consumes 'application/json'
       produces 'application/json'
@@ -58,11 +58,15 @@ RSpec.describe 'api/v1/users', type: :request do
           user: {
             type: :object,
             properties: {
-              email: { type: :string },
+              username: { type: :string },
+              email: { type: :string, default: "string@string.string" },
               password: { type: :string },
-              password_confirmation: { type: :string }
+              password_confirmation: { type: :string },
+              first_name: { type: :string },
+              last_name: { type: :string },
+              gender: { type: :integer, default: 1 }
             },
-            required: %w[email password password_confirmation]
+            required: %w[username email password password_confirmation first_name last_name gender]
           }
         }
       }

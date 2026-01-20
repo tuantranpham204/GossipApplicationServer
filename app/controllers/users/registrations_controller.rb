@@ -1,54 +1,44 @@
-
 class Users::RegistrationsController < Devise::RegistrationsController
-  respond_to :json
+  include ApiResponder
+  include ErrorHandlers
+  include ProfileConcern
+  include JwtService
+  # before_action :sign_up_params
+
+
+  # POST /resource
   def create
-    begin
-      user_data = params.require(:user).permit(:email, :password, :first_name, :last_name).to_h
-
-      build_resource(sign_up_params)
-      if resource.save
-        # Force the token generation immediately if you want auto-login
-        sign_up(resource_name, resource) if resource.active_for_authentication?
-
-        json_success(
-          data: UserSerializer.new(resource),
-          message: I18n.t("devise.registrations.signed_up")
-        )
+    build_resource sign_up_params
+    resource.save
+    if resource.persisted?
+      if resource.active_for_authentication?
+        sign_up(resource_name, resource)
+        json_success(data: { user: resource, profile: resource.profile })
       else
-        # Clean up the password from memory/logs
-        clean_up_passwords resource
-        set_minimum_password_length
-
-        json_error(
-          message: I18n.t("errors.messages.not_saved"),
-          status: :unprocessable_entity,
-          errors: resource.errors.as_json
-        )
+        expire_data_after_sign_in!
+        raise AppError.new(ErrorCode::UNAUTHORIZED)
       end
-    rescue => e
-      raise AppError.new(ErrorCode::SYSTEM_ERROR_DEBUG, params: { error_details: e.message })
+    else
+      clean_up_passwords resource
+      set_minimum_password_length
+      raise AppError.new(ErrorCode::VALIDATION_ERROR, params: { details: resource.errors.full_messages.to_s })
     end
   end
 
 
+  protected
 
-  private
-
-  def respond_with(resource, _opts = {})
-    if resource.persisted?
-      # SUCCESS: Account created
-      json_success(
-        data: UserSerializer.new(resource),
-        message: I18n.t("devise.registrations.signed_up")
-      )
-    else
-      # FAILURE: Validation errors (e.g. Password too short)
-      # We use resource.errors to populate the 'errors' field
-      json_error(
-        message: I18n.t("errors.messages.not_saved"),
-        status: :unprocessable_entity,
-        errors: resource.errors.as_json
-      )
-    end
+  def sign_up_params
+    {
+      email: params[:user][:email],
+      password: params[:user][:password],
+      password_confirmation: params[:user][:password_confirmation],
+      username: params[:user][:username],
+      profile_attributes: {
+        first_name: params[:user][:first_name],
+        last_name: params[:user][:last_name],
+        gender: params[:user][:gender],
+      }
+    }
   end
 end

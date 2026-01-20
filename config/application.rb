@@ -16,6 +16,9 @@ module GossipApplication
     # Common ones are `templates`, `generators`, or `middleware`, for example.
     config.autoload_lib(ignore: %w[assets tasks])
 
+    # Add app/errors to autoload paths so we can use AppError directly without Errors:: prefix
+    config.autoload_paths << Rails.root.join("app/errors")
+
     # Configuration for the application, engines, and railties goes here.
     #
     # These settings can be overridden in specific environments using the files
@@ -29,15 +32,19 @@ module GossipApplication
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
 
-    # 1. Allow these locales (e.g., English and Vietnamese)
+    # Devise relies on sessions and cookies, even for API-only apps.
+    # We must re-enable these middleware classes.
+    config.session_store :cookie_store, key: '_interslice_session'
+    config.middleware.use ActionDispatch::Cookies
+    config.middleware.use ActionDispatch::Flash
+    config.middleware.use config.session_store, config.session_options
+
+
+    # Allow these locales (e.g., English and Vietnamese)
     config.i18n.available_locales = [:en, :vi]
-
-    # 2. Set default locale
+    # Set default locale
     config.i18n.default_locale = :en
-
-    # 3. (Optional) Raise error if translation is missing (great for dev)
+    # Raise error if translation is missing (great for dev)
     config.i18n.fallbacks = true
-
-
   end
 end

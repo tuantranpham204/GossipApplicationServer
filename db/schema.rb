@@ -10,9 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_01_15_062648) do
+ActiveRecord::Schema[8.1].define(version: 2026_01_20_115343) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "jwt_denylists", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "exp"
+    t.string "jti"
+    t.datetime "updated_at", null: false
+    t.index ["jti"], name: "index_jwt_denylists_on_jti"
+  end
 
   create_table "messages", force: :cascade do |t|
     t.jsonb "attachment_data"
@@ -52,17 +60,18 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_15_062648) do
   end
 
   create_table "profiles", primary_key: "user_id", force: :cascade do |t|
-    t.boolean "allow_direct_follows", null: false
+    t.boolean "allow_direct_follows", default: true, null: false
     t.jsonb "avatar_data"
     t.string "bio"
     t.datetime "created_at", null: false
-    t.string "full_name", null: false
+    t.string "first_name", null: false
     t.integer "gender", null: false
-    t.boolean "is_email_public", null: false
-    t.boolean "is_gender_public", null: false
-    t.boolean "is_rel_status_public", null: false
-    t.integer "relationship_status", null: false
-    t.integer "status", null: false
+    t.boolean "is_email_public", default: false, null: false
+    t.boolean "is_gender_public", default: true, null: false
+    t.boolean "is_rel_status_public", default: false, null: false
+    t.string "last_name", null: false
+    t.integer "relationship_status", default: 0, null: false
+    t.integer "status", default: 1, null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_profiles_on_user_id"
   end
@@ -77,13 +86,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_15_062648) do
     t.datetime "updated_at", null: false
     t.index ["receiver_id"], name: "index_requests_on_receiver_id"
     t.index ["sender_id"], name: "index_requests_on_sender_id"
-  end
-
-  create_table "roles", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.string "role_name"
-    t.datetime "updated_at", null: false
-    t.index ["role_name"], name: "index_roles_on_role_name"
   end
 
   create_table "rooms", force: :cascade do |t|
@@ -105,28 +107,27 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_15_062648) do
     t.index ["requester_id"], name: "index_user_relations_on_requester_id"
   end
 
-  create_table "user_role", primary_key: ["user_id", "role_id"], force: :cascade do |t|
-    t.bigint "role_id", null: false
-    t.bigint "user_id", null: false
-    t.index ["role_id", "user_id"], name: "index_user_role_on_role_id_and_user_id"
-    t.index ["role_id"], name: "index_user_role_on_role_id"
-    t.index ["user_id", "role_id"], name: "pk_user_roles", unique: true
-    t.index ["user_id"], name: "index_user_role_on_user_id"
-  end
-
   create_table "users", force: :cascade do |t|
+    t.datetime "confirmation_sent_at"
     t.string "confirmation_token"
     t.datetime "confirmed_at"
     t.datetime "created_at", null: false
     t.string "email", null: false
+    t.string "encrypted_password", default: "", null: false
     t.string "jti"
     t.string "locale", default: "en"
-    t.string "password_digest", null: false
+    t.datetime "remember_created_at"
+    t.datetime "reset_password_sent_at"
+    t.string "reset_password_token"
+    t.integer "roles", default: [1], array: true
+    t.string "unconfirmed_email"
     t.datetime "updated_at", null: false
     t.string "username", null: false
     t.datetime "username_last_changed_at"
+    t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email"
     t.index ["jti"], name: "index_users_on_jti"
+    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["username"], name: "index_users_on_username"
   end
 
@@ -141,6 +142,4 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_15_062648) do
   add_foreign_key "requests", "users", column: "sender_id"
   add_foreign_key "user_relations", "users", column: "receiver_id"
   add_foreign_key "user_relations", "users", column: "requester_id"
-  add_foreign_key "user_role", "roles"
-  add_foreign_key "user_role", "users"
 end

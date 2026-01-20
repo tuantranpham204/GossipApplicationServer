@@ -325,17 +325,25 @@ Devise.setup do |config|
     # Dispatch Requests (When to ENCODE/Creation)
     # "Create a token for these requests"
     jwt.dispatch_requests = [
-      [ "POST", %r{^#{api_prefix}/sign_in$} ],
-      [ "POST", %r{^#{api_prefix}/sign_up$} ]
+      [ "POST", %r{^#{api_prefix}/users/sign_in$} ],
+      [ "POST", %r{^#{api_prefix}/users/sign_up$} ]
     ]
 
     # Revocation Requests (When to INVALIDATE)
     # "Invalidate the token for these requests"
     jwt.revocation_requests = [
-      [ "DELETE", %r{^#{api_prefix}/sign_out$} ]
+      [ "DELETE", %r{^#{api_prefix}/users/sign_out$} ]
     ]
 
     jwt.expiration_time = 1.day.to_i
+
+    # ==> Config for authentication keys
+    # Change this from [:email] to [:login]
+    config.authentication_keys = [:email_or_username]
+    # Make sure params are case-insensitive
+    config.case_insensitive_keys = [:email_or_username]
+    config.strip_whitespace_keys = [:email_or_username]
+
   end
 
 end

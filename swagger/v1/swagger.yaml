@@ -6,7 +6,7 @@ info:
 paths:
   "/api/v1/users/sign_in":
     post:
-      summary: Login User
+      summary: Sign In
       tags:
       - Authentication
       parameters: []
@@ -24,16 +24,16 @@ paths:
                 user:
                   type: object
                   properties:
-                    email:
+                    email_or_username:
                       type: string
                     password:
                       type: string
                   required:
-                  - email
+                  - email_or_username
                   - password
   "/api/v1/users/sign_up":
     post:
-      summary: Register User
+      summary: Sign Up
       tags:
       - Authentication
       parameters: []
@@ -51,16 +51,30 @@ paths:
                 user:
                   type: object
                   properties:
+                    username:
+                      type: string
                     email:
                       type: string
+                      default: string@string.string
                     password:
                       type: string
                     password_confirmation:
                       type: string
+                    first_name:
+                      type: string
+                    last_name:
+                      type: string
+                    gender:
+                      type: integer
+                      default: 1
                   required:
+                  - username
                   - email
                   - password
                   - password_confirmation
+                  - first_name
+                  - last_name
+                  - gender
   "/api/v1/users/me":
     patch:
       summary: Change User Langue

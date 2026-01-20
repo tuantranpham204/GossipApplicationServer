@@ -7,7 +7,7 @@ RSpec.describe 'api/v1/users', type: :request do
   path '/api/v1/users/me' do
 
     patch('Change User Langue') do
-      tags 'Users' # <--- This groups it in the UI
+      tags 'Users'
       consumes 'application/json'
       produces 'application/json'
 
@@ -20,7 +20,7 @@ RSpec.describe 'api/v1/users', type: :request do
             properties: {
               locale: { type: :string }
             },
-            required: ["locale"]
+            required: [ "locale" ]
           }
         }
       }

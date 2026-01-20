@@ -3,9 +3,7 @@ class CreateUsers < ActiveRecord::Migration[8.1]
     create_table :users do |t|
       t.string :username, null: false
       t.string :email, null: false
-      t.string :password_digest, null: false
-      t.string :confirmation_token
-      t.datetime :confirmed_at
+      t.integer :roles, array: true, default: [ 1 ]
       t.datetime :username_last_changed_at
 
       t.timestamps
