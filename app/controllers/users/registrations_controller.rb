@@ -2,7 +2,6 @@ class Users::RegistrationsController < Devise::RegistrationsController
   include ApiResponder
   include ErrorHandlers
   include ProfileConcern
-  include JwtService
   # before_action :sign_up_params
 
 
@@ -16,7 +15,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
         json_success(data: { user: resource, profile: resource.profile })
       else
         expire_data_after_sign_in!
-        raise AppError.new(ErrorCode::UNAUTHORIZED)
+        json_success(message: I18n.t("devise.registrations.signed_up_but_unconfirmed"), data: { user: resource })
       end
     else
       clean_up_passwords resource

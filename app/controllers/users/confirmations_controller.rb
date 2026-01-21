@@ -24,7 +24,12 @@ class Users::ConfirmationsController < Devise::ConfirmationsController
   # end
 
   # The path used after confirmation.
-  # def after_confirmation_path_for(resource_name, resource)
-  #   super(resource_name, resource)
-  # end
+  def after_confirmation_path_for(resource_name, resource)
+    # Redirect to a frontend login page or a simple success page
+    # showing a flash message.
+    # For now, we'll redirect to a client login URL if configured, 
+    # or a generic success message.
+    client_url = ENV["CLIENT_URL"] || "http://localhost:5173"
+    "#{client_url}/sign_in?confirmed=true"
+  end
 end

@@ -12,10 +12,9 @@ class Users::SessionsController < Devise::SessionsController
 
   #POST /resource/sign_in
   def create
-    self.resource = warden.authenticate!(auth_options)
-    sign_in(resource_name, resource)
-    yield resource if block_given?
-    json_success(data: {}, message: I18n.t("messages.sign_in_ok", username: resource.username))
+    super
+    @token = request.env['warden-jwt_auth.token']
+    @username = resource.username
   end
 
   # DELETE /resource/sign_out
@@ -37,9 +36,9 @@ class Users::SessionsController < Devise::SessionsController
   private
 
   # Devise-JWT adds the token to the HEADER automatically.
-  # We just need to ensure the body returns the JSON we want.
   def respond_with(resource, _opts = {})
-    json_success(data: {}, message: I18n.t("messages.sign_in_ok", username: resource.username))
+    yield resource if block_given? 
+    json_success(data: { token: @token, username: @username }, message: I18n.t("messages.sign_in_ok", username: @username))
   end
 
   def respond_to_on_destroy

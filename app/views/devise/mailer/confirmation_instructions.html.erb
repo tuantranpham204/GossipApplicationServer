@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f6f9fc;
+      margin: 0;
+      padding: 0;
+      color: #333333;
+    }
+    .container {
+      max-width: 600px;
+      margin: 40px auto;
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    h2 {
+      color: #2c3e50;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    p {
+      line-height: 1.6;
+      font-size: 16px;
+      margin-bottom: 20px;
+    }
+    .btn {
+      display: block;
+      width: 200px;
+      margin: 30px auto;
+      text-align: center;
+      background-color: #3498db;
+      color: #ffffff;
+      text-decoration: none;
+      padding: 12px 20px;
+      border-radius: 4px;
+      font-weight: bold;
+    }
+    .btn:hover {
+      background-color: #2980b9;
+    }
+    .footer {
+      margin-top: 30px;
+      text-align: center;
+      font-size: 12px;
+      color: #7f8c8d;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Welcome to Gossip Application!</h2>
+    <p>Hi <%= @email %>,</p>
+    <p>Thank you for signing up. To get started, please confirm your email address by clicking the button below:</p>
+    
+    <p>
+      <%= link_to 'Confirm my account', user_confirmation_url(confirmation_token: @token), class: 'btn', style: 'color: #ffffff;' %>
+    </p>
+    
+    <p>If you didn't request this, you can safely ignore this email.</p>
+    
+    <div class="footer">
+      <p>&copy; <%= Time.current.year %> Gossip Application. All rights reserved.</p>
+    </div>
+  </div>
+</body>
+</html>
