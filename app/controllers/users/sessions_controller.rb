@@ -7,9 +7,25 @@ class Users::SessionsController < Devise::SessionsController
 
   #POST /resource/sign_in
   def create
-    super
-    @token = request.env['warden-jwt_auth.token']
-    @username = resource.username
+    # Find user by email first
+    user = User.find_by(email: sign_in_params[:email])
+    
+    if user && user.valid_password?(sign_in_params[:password])
+      sign_in(resource_name, user)
+      @token = request.env['warden-jwt_auth.token']
+      @username = user.username
+      yield user if block_given?
+      respond_with user, location: after_sign_in_path_for(user)
+    else
+      # Fallback to warden authentication
+      self.resource = warden.authenticate!(auth_options)
+      set_flash_message!(:notice, :signed_in)
+      sign_in(resource_name, resource)
+      @username = resource.username
+      yield resource if block_given?
+      @token = request.env['warden-jwt_auth.token']
+      respond_with resource, location: after_sign_in_path_for(resource)
+    end
   end
 
   # DELETE /resource/sign_out
@@ -39,7 +55,7 @@ class Users::SessionsController < Devise::SessionsController
     else
         # If we are here (e.g. from a 'new' action recall), it means auth failed.
         # Fallback to returning 401 if CustomDeviseFailureApp didn't intercept it.
-        json_error(message: I18n.t("devise.failure.invalid", authentication_keys: "email/username", default: "Invalid email or password."), status: :unauthorized)
+        json_error(message: I18n.t("devise.failure.invalid", authentication_keys: "email", default: "Invalid email or password."), status: :unauthorized)
     end
   end
 

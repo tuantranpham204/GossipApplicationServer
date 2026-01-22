@@ -17,10 +17,10 @@ RSpec.describe 'api/v1/users', type: :request do
           user: {
             type: :object,
             properties: {
-              email_or_username: { type: :string },
+              email: { type: :string },
               password: { type: :string }
             },
-            required: %w[email_or_username password]
+            required: %w[email password]
           }
         }
       }
@@ -64,8 +64,8 @@ RSpec.describe 'api/v1/users', type: :request do
               password_confirmation: { type: :string },
               first_name: { type: :string },
               last_name: { type: :string },
-              gender: { type: :integer, default: 1 }
-              dob: { type: :date }
+              gender: { type: :integer, default: 1 },
+              dob: { type: :string, format: 'date', example: '2000-01-01'}
             },
             required: %w[username email password password_confirmation first_name last_name gender dob]
           }

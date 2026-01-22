@@ -10,8 +10,12 @@ class User < ApplicationRecord
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable,
-         :confirmable,
-         :jwt_authenticatable, jwt_revocation_strategy: JwtDenylist
+         :confirmable, 
+         :jwt_authenticatable, 
+         # :omniauthable,
+         jwt_revocation_strategy: JwtDenylist
+         # omniauth_providers: [:google_oauth2]
+
 
   has_one :profile, dependent: :destroy, autosave: true
   accepts_nested_attributes_for :profile
@@ -40,6 +44,23 @@ class User < ApplicationRecord
 
   # Add validations to ensure usernames are unique
   validates :username, presence: true, uniqueness: { case_sensitive: false }
+
+  def self.from_omniauth(auth)
+    where(provider: auth.provider, uid: auth.uid).first_or_create do |user|
+      user.email = auth.info.email
+      user.password = Devise.friendly_token[0, 20]
+      user.password_confirmation = user.password
+      user.username = auth.info.email.split('@').first + "_" + SecureRandom.hex(4)
+      user.confirmed_at = Time.current
+      user.profile_attributes = {
+        first_name: auth.info.first_name || "First",
+        last_name: auth.info.last_name || "Last",
+        gender: 1,
+        dob: Date.new(2000, 1, 1)
+      }
+    end
+  end
+
 
 
 end

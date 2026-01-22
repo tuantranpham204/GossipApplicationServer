@@ -24,12 +24,12 @@ paths:
                 user:
                   type: object
                   properties:
-                    email_or_username:
+                    email:
                       type: string
                     password:
                       type: string
                   required:
-                  - email_or_username
+                  - email
                   - password
   "/api/v1/users/sign_up":
     post:
@@ -67,6 +67,10 @@ paths:
                     gender:
                       type: integer
                       default: 1
+                    dob:
+                      type: string
+                      format: date
+                      example: '2000-01-01'
                   required:
                   - username
                   - email
@@ -75,6 +79,23 @@ paths:
                   - first_name
                   - last_name
                   - gender
+                  - dob
+  "/api/v1/users/confirmation":
+    get:
+      summary: Confirm Account
+      tags:
+      - Authentication
+      parameters:
+      - name: confirmation_token
+        in: query
+        required: true
+        schema:
+          type: string
+      responses:
+        '302':
+          description: redirected
+        '422':
+          description: invalid token
   "/api/v1/users/me":
     patch:
       summary: Change User Langue

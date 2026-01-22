@@ -52,7 +52,7 @@ Devise.setup do |config|
   # session. If you need permissions, you should implement that in a before filter.
   # You can also supply a hash where the value is a boolean determining whether
   # or not authentication should be aborted when the value is not present.
-  # config.authentication_keys = [:email]
+  config.authentication_keys = [:email]
 
   # Configure parameters from the request object used for authentication. Each entry
   # given should be a request method and it will automatically be passed to the
@@ -347,6 +347,16 @@ Devise.setup do |config|
     # Change this from [:email] to [:login]
 
     # Make sure params are case-insensitive
+
+  # ==> Configuration for :omniauthable
+
+  # OAuth2 configuration for Google
+  
+  # config.omniauth :google_oauth2, ENV["GOOGLE_CLIENT_ID"], ENV["GOOGLE_CLIENT_SECRET"], {
+  #   scope: "userinfo.profile,youtube,userinfo.email",
+  #   access_type: 'offline',
+  #   approval_prompt: 'force'
+  # }
 
 
   end

@@ -57,7 +57,7 @@
     <p>Thank you for signing up. To get started, please confirm your email address by clicking the button below:</p>
     
     <p>
-      <%= link_to 'Confirm my account', user_confirmation_url(confirmation_token: @token), class: 'btn', style: 'color: #ffffff;' %>
+      <%= link_to 'Confirm my account', api_v1_user_confirmation_url(confirmation_token: @token), class: 'btn', style: 'color: #ffffff;' %>
     </p>
     
     <p>If you didn't request this, you can safely ignore this email.</p>

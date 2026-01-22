@@ -12,9 +12,27 @@ class Users::ConfirmationsController < Devise::ConfirmationsController
   # end
 
   # GET /resource/confirmation?confirmation_token=abcdef
-  # def show
-  #   super
-  # end
+  def show
+    client_url = ENV["CLIENT_SYSTEM_URL"] || "http://localhost:5173"
+
+    token = params[:confirmation_token]
+    if token.blank?
+      return redirect_to "#{client_url}/activation-status?confirmed=invalid"
+    end
+
+    self.resource = resource_class.confirm_by_token(token)
+
+    if resource.errors.empty?
+      # Success path
+      redirect_to after_confirmation_path_for(resource_name, resource)
+    elsif resource.errors.of_kind?(:email, :already_confirmed)
+      # Already confirmed – redirect to client with status
+      redirect_to "#{client_url}/activation-status?confirmed=already"
+    else
+      # Invalid or expired token
+      redirect_to "#{client_url}/activation-status?confirmed=invalid"
+    end
+  end
 
   # protected
 
@@ -29,7 +47,7 @@ class Users::ConfirmationsController < Devise::ConfirmationsController
     # showing a flash message.
     # For now, we'll redirect to a client login URL if configured, 
     # or a generic success message.
-    client_url = ENV["CLIENT_URL"] || "http://localhost:5173"
-    "#{client_url}/sign_in?confirmed=true"
+    client_url = ENV["CLIENT_SYSTEM_URL"] ||"http://localhost:5173"
+    "#{client_url}/activation-status?confirmed=true"
   end
 end
