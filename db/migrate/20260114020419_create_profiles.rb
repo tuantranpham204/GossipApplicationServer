@@ -4,7 +4,8 @@ class CreateProfiles < ActiveRecord::Migration[8.1]
       t.belongs_to :user, primary_key: true, foreign_key: { on_delete: :cascade }
       t.string :first_name, null: false
       t.string :last_name, null: false
-      t.string :bio
+      t.string :bio, default: ""
+      t.date :dob
       t.integer :gender, null: false
       t.integer :relationship_status, null: false, default: 0
       t.integer :status, null: false, default: 1

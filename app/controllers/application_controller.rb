@@ -2,7 +2,6 @@ class ApplicationController < ActionController::API
   include Pundit::Authorization
   include ApiResponder
   include ErrorHandlers
-  include JwtService
   include ActionController::Flash
   # before_action :devise_parameter_sanitizer # This is not needed and was likely incorrect usage
 

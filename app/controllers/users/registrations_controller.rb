@@ -37,6 +37,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
         first_name: params[:user][:first_name],
         last_name: params[:user][:last_name],
         gender: params[:user][:gender],
+        dob: params[:user][:dob]
       }
     }
   end

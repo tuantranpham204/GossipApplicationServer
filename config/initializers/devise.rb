@@ -345,10 +345,9 @@ Devise.setup do |config|
 
     # ==> Config for authentication keys
     # Change this from [:email] to [:login]
-    config.authentication_keys = [:email_or_username]
+
     # Make sure params are case-insensitive
-    config.case_insensitive_keys = [:email_or_username]
-    config.strip_whitespace_keys = [:email_or_username]
+
 
   end
 

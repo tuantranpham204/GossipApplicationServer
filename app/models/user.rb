@@ -31,10 +31,7 @@ class User < ApplicationRecord
 
   has_many :requesters, through: :passive_relationships, source: :requester
   has_many :receivers, through: :active_relationships, source: :receiver
-
-  # Virtual attribute for authenticating by either username or email
-  attr_writer :email_or_username
-
+  
   validates :email,
             presence: true,
             uniqueness: { case_sensitive: false },
@@ -43,35 +40,6 @@ class User < ApplicationRecord
 
   # Add validations to ensure usernames are unique
   validates :username, presence: true, uniqueness: { case_sensitive: false }
-
-
-  def roles_attributes=(role_attributes)
-    role_attributes.each do |i, attributes|
-      # If a role with this name exists, use it; otherwise build a new one
-      id = attributes[:role_id]
-      role = Role.find(id: id)
-      if role
-        self.roles << role unless self.roles.include?(role)
-      else
-        raise AppError.new(ErrorCode::RESOURCE_NOT_FOUND, params: { resource: { name: "role", attribute: "id" , value: id.to_s } })
-      end
-    end
-  end
-
-  def email_or_username
-    @email_or_username || self.username || self.email
-  end
-
-  # Overwrite the Devise lookup method
-  def self.find_for_database_authentication(warden_conditions)
-    conditions = warden_conditions.dup
-    if (login = conditions.delete(:email_or_username))
-      # Query the DB for email OR username (case-insensitive)
-      where(conditions.to_h).where(["lower(username) = :value OR lower(email) = :value", { value: login.downcase }]).first
-    elsif conditions.has_key?(:username) || conditions.has_key?(:email)
-      where(conditions.to_h).first
-    end
-  end
 
 
 end

@@ -62,8 +62,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_20_115343) do
   create_table "profiles", primary_key: "user_id", force: :cascade do |t|
     t.boolean "allow_direct_follows", default: true, null: false
     t.jsonb "avatar_data"
-    t.string "bio"
+    t.string "bio", default: ""
     t.datetime "created_at", null: false
+    t.date "dob"
     t.string "first_name", null: false
     t.integer "gender", null: false
     t.boolean "is_email_public", default: false, null: false
