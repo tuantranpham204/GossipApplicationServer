@@ -2,6 +2,9 @@
 
 class User < ApplicationRecord
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
+  VALID_USERNAME_REGEX = /\A(?![._-])(?!.*[._-]{2})[a-zA-Z0-9._-]+(?<![._-])\z/
+  VALID_PASSWORD_REGEX = /\A(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\S+$).{8,20}\z/
+
   ROLES = {
     USER: 1,
     ADMIN: 2
@@ -10,11 +13,11 @@ class User < ApplicationRecord
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable,
-         :confirmable, 
-         :jwt_authenticatable, 
+         :confirmable,
+         :jwt_authenticatable,
          # :omniauthable,
          jwt_revocation_strategy: JwtDenylist
-         # omniauth_providers: [:google_oauth2]
+  # omniauth_providers: [:google_oauth2]
 
 
   has_one :profile, dependent: :destroy, autosave: true
@@ -35,7 +38,7 @@ class User < ApplicationRecord
 
   has_many :requesters, through: :passive_relationships, source: :requester
   has_many :receivers, through: :active_relationships, source: :receiver
-  
+
   validates :email,
             presence: true,
             uniqueness: { case_sensitive: false },
@@ -43,24 +46,26 @@ class User < ApplicationRecord
             length: { maximum: 105 }
 
   # Add validations to ensure usernames are unique
-  validates :username, presence: true, uniqueness: { case_sensitive: false }
-
-  def self.from_omniauth(auth)
-    where(provider: auth.provider, uid: auth.uid).first_or_create do |user|
-      user.email = auth.info.email
-      user.password = Devise.friendly_token[0, 20]
-      user.password_confirmation = user.password
-      user.username = auth.info.email.split('@').first + "_" + SecureRandom.hex(4)
-      user.confirmed_at = Time.current
-      user.profile_attributes = {
-        first_name: auth.info.first_name || "First",
-        last_name: auth.info.last_name || "Last",
-        gender: 1,
-        dob: Date.new(2000, 1, 1)
-      }
-    end
-  end
+  validates :username, presence: true, length: { minimum: 5, maximum: 30 }, uniqueness: { case_sensitive: false }, format: { with: VALID_USERNAME_REGEX }
+  validates :password, presence: true,
+                       length: Rails.env.production? ? { minimum: 0, maximum: 20 } : { minimum: 6, maximum: 20 }
+  validates :password, format: { with: VALID_PASSWORD_REGEX }, if: -> { Rails.env.production? }
 
 
 
+  # def self.from_omniauth(auth)
+  #   where(provider: auth.provider, uid: auth.uid).first_or_create do |user|
+  #     user.email = auth.info.email
+  #     user.password = Devise.friendly_token[0, 20]
+  #     user.password_confirmation = user.password
+  #     user.username = auth.info.email.split("@").first + "_" + SecureRandom.hex(4)
+  #     user.confirmed_at = Time.current
+  #     user.profile_attributes = {
+  #       first_name: auth.info.first_name || "First",
+  #       last_name: auth.info.last_name || "Last",
+  #       gender: 1,
+  #       dob: Date.new(2000, 1, 1)
+  #     }
+  #   end
+  # end
 end

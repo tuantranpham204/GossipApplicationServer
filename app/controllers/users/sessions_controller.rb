@@ -5,15 +5,14 @@ class Users::SessionsController < Devise::SessionsController
   include ErrorHandlers
   # before_action :configure_sign_in_params, only: [:create]
 
-  #POST /resource/sign_in
+  # POST /resource/sign_in
   def create
     # Find user by email first
     user = User.find_by(email: sign_in_params[:email])
-    
+
     if user && user.valid_password?(sign_in_params[:password])
       sign_in(resource_name, user)
-      @token = request.env['warden-jwt_auth.token']
-      @username = user.username
+      @token = request.env["warden-jwt_auth.token"]
       yield user if block_given?
       respond_with user, location: after_sign_in_path_for(user)
     else
@@ -21,9 +20,8 @@ class Users::SessionsController < Devise::SessionsController
       self.resource = warden.authenticate!(auth_options)
       set_flash_message!(:notice, :signed_in)
       sign_in(resource_name, resource)
-      @username = resource.username
       yield resource if block_given?
-      @token = request.env['warden-jwt_auth.token']
+      @token = request.env["warden-jwt_auth.token"]
       respond_with resource, location: after_sign_in_path_for(resource)
     end
   end
@@ -49,9 +47,9 @@ class Users::SessionsController < Devise::SessionsController
 
   # Devise-JWT adds the token to the HEADER automatically.
   def respond_with(resource, _opts = {})
-    if action_name == 'create'
+    if action_name == "create"
       yield resource if block_given?
-      json_success(data: { token: @token, username: @username }, message: I18n.t("messages.sign_in_ok", username: @username))
+      json_success(data: { token: @token, user_id: resource.id, username: resource.username, roles: resource.roles, firstName: resource.profile.first_name, lastName: resource.profile.last_name, avatar_url: resource.profile.avatar_data["url"] }, message: I18n.t("messages.sign_in_ok", username: @username))
     else
         # If we are here (e.g. from a 'new' action recall), it means auth failed.
         # Fallback to returning 401 if CustomDeviseFailureApp didn't intercept it.
@@ -60,10 +58,6 @@ class Users::SessionsController < Devise::SessionsController
   end
 
   def respond_to_on_destroy
-    if current_user
-      json_success(data: {}, message: I18n.t("messages.sign_out_ok", username: current_user.username))
-    else
-      json_error(message: I18n.t("devise.failure.unauthenticated", default: "You need to sign in or sign up before continuing."), status: :unauthorized)
-    end
+    json_success(data: {}, message: I18n.t("messages.sign_out_ok", username: "User"))
   end
 end

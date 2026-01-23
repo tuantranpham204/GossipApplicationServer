@@ -22,18 +22,20 @@ Rails.application.routes.draw do
                  controllers: {
                    sessions: "users/sessions",
                    registrations: "users/registrations",
-                   confirmations: "users/confirmations",
-                  #  omniauth_callbacks: "users/omniauth_callbacks"
+                   confirmations: "users/confirmations"
+                   #  omniauth_callbacks: "users/omniauth_callbacks"
                  }
       resources :users, only: [] do
         collection do
           patch "me", to: "users"
         end
       end
+      resources :profiles, only: [] do
+        collection do
+          get "host/:user_id", to: "profiles#get_by_host"
+          get "guest/:user_id", to: "profiles#get_by_guest"
+        end
+      end
     end
-
-
   end
-
-
 end

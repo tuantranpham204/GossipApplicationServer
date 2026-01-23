@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Users::ConfirmationsController < Devise::ConfirmationsController
+  include ApiResponder
+  include ErrorHandlers
   # GET /resource/confirmation/new
   # def new
   #   super
@@ -45,7 +47,7 @@ class Users::ConfirmationsController < Devise::ConfirmationsController
   def after_confirmation_path_for(resource_name, resource)
     # Redirect to a frontend login page or a simple success page
     # showing a flash message.
-    # For now, we'll redirect to a client login URL if configured, 
+    # For now, we'll redirect to a client login URL if configured,
     # or a generic success message.
     client_url = ENV["CLIENT_SYSTEM_URL"] ||"http://localhost:5173"
     "#{client_url}/activation-status?confirmed=true"

@@ -28,7 +28,17 @@ RSpec.configure do |config|
           url: ENV.fetch('SWAGGER_HOST', 'http://localhost:3000'),
           description: 'API Server'
         }
-      ]
+      ],
+      components: {
+        securitySchemes: {
+          Bearer: {
+            description: 'JWT key necessary to use API calls',
+            type: :apiKey,
+            name: 'Authorization',
+            in: :header
+          }
+        }
+      }
     }
   }
 

@@ -96,6 +96,44 @@ paths:
           description: redirected
         '422':
           description: invalid token
+  "/api/v1/users/sign_out":
+    delete:
+      summary: Sign Out
+      tags:
+      - Authentication
+      security:
+      - Bearer: []
+      responses:
+        '200':
+          description: successful
+  "/api/v1/profiles/host/{user_id}":
+    get:
+      summary: Get Profile by Host
+      tags:
+      - Profiles
+      parameters:
+      - name: user_id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: successful
+  "/api/v1/profiles/guest/{user_id}":
+    get:
+      summary: Get Profile by Guest
+      tags:
+      - Profiles
+      parameters:
+      - name: user_id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: successful
   "/api/v1/users/me":
     patch:
       summary: Change User Langue
@@ -123,3 +161,10 @@ paths:
 servers:
 - url: http://localhost:3000
   description: API Server
+components:
+  securitySchemes:
+    Bearer:
+      description: JWT key necessary to use API calls
+      type: apiKey
+      name: Authorization
+      in: header

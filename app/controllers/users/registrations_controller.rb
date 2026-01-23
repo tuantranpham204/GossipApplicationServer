@@ -20,7 +20,11 @@ class Users::RegistrationsController < Devise::RegistrationsController
     else
       clean_up_passwords resource
       set_minimum_password_length
-      raise AppError.new(ErrorCode::VALIDATION_ERROR, params: { details: resource.errors.full_messages.to_s })
+      error_message_builder = ""
+      resource.errors.full_messages.each do |error_message|
+        error_message_builder += error_message.to_s + ", "
+      end
+      raise AppError.new(ErrorCode::VALIDATION_ERROR, params: { details:  error_message_builder.chomp(", ") })
     end
   end
 
