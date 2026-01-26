@@ -1,10 +1,13 @@
 en:
   hello: "Hello world"
 
+  profile:
+    updated: "Profile updated successfully."
+    avatar_updated: "Profile avatar updated successfully."
+
   locale:
     en: "English"
     vi: "Vietnamese"
-
 
   models:
     user:
@@ -29,12 +32,14 @@ en:
     token_expired: "Token has expired."
     username_used: "%{username} is already used. Please choose another one."
 
-    resource_not_found: "%{resource.name} with the attribute %{resource.attribute} has value %{resource.value} was not found"
+    resource_not_found: "%{resource_name} with the attribute %{resource_attribute} has value %{resource_value} was not found"
     cannot_create_resource: "Cannot create %{resource.name}."
 
     missing_param: "%{param} has not been entered."
 
     user_inactive: "User is inactive."
+    forbidden: "Forbidden."
+    user_unpermitted: "User is unpermitted to execute this action."
 
   validation:
     validation_error: "Validation Error: %{details}"

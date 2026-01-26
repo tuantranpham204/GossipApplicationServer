@@ -16,8 +16,8 @@ RSpec.describe 'api/v1/users', type: :request do
           user: {
             type: :object,
             properties: {
-              email: { type: :string },
-              password: { type: :string }
+              email: { type: :string, default: "12a1tranphamtuan69@gmail.com" },
+              password: { type: :string, default: "string" }
             },
             required: %w[email password]
           }
