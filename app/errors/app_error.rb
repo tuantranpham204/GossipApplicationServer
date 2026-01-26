@@ -3,7 +3,6 @@ class AppError < StandardError
 
   # usage: raise AppError.new(ErrorCode::USER_NOT_FOUND)
   # usage: raise AppError.new(ErrorCode::INVALID_TICKET, params: { ticket_id: ticket.id  })
-  attr_reader :code, :status, :message, :errors
 
   def initialize(error_type, params: {}, errors: nil, message: nil)
     @code = error_type[:code]
@@ -19,3 +18,6 @@ class AppError < StandardError
     @message = I18n.t(key_or_text, **params)
   end
 end
+
+
+

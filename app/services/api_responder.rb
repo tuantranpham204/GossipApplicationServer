@@ -1,14 +1,10 @@
 # frozen_string_literal: true
 
 module ApiResponder
-  extend ActiveSupport::Concern
-
-  private
-
-  def json_success(data: nil, message: "Success", status: :ok)
+  def json_success(data: nil, message: "success", status: :ok)
     render json: {
       code: Rack::Utils.status_code(status),
-      status: "success",
+      status: status,
       message: message,
       data: data,
       errors: nil
@@ -18,11 +14,10 @@ module ApiResponder
   def json_error(message: "Error", status: :bad_request, errors: nil)
     render json: {
       code: Rack::Utils.status_code(status),
-      status: "error",
+      status: status,
       message: message,
       data: nil,
       errors: errors
     }, status: status
   end
-
 end

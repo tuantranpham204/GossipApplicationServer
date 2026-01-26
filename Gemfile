@@ -42,6 +42,11 @@ gem 'rswag-api'
 gem 'rswag-ui'
 gem 'rswag-specs'
 
+# -- DEBUG
+gem 'pry'
+# Optional: Add pry-byebug for step-through debugging commands
+gem 'pry-byebug'
+
 # Language
 gem 'rails-i18n'
 

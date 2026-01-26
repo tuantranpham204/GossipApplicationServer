@@ -1,7 +1,7 @@
-# app/lib/custom_devise_failure_app.rb
-class CustomDeviseFailureApp < Devise::FailureApp
+class CustomDeviseFailureApp < Devise::FailureApp   
   def respond
-    if request.format == :json
+    Rails.logger.info "CustomDeviseFailureApp#respond: format=#{request.format}, content_type=#{request.content_type}"
+    if request.format == :json || request.content_type.to_s.include?('json')
       json_error_response
     else
       super
@@ -9,7 +9,6 @@ class CustomDeviseFailureApp < Devise::FailureApp
   end
 
   def json_error_response
-    include ApiResponder
     self.status = 401
     self.content_type = 'application/json'
 

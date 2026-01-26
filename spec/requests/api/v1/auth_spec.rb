@@ -1,0 +1,118 @@
+require 'swagger_helper'
+require 'devise/jwt/test_helpers'
+
+RSpec.describe 'api/v1/users', type: :request do
+  # Grouping: This creates a folder in the UI called "Authentication"
+  path '/api/v1/users/sign_in' do
+    post('Sign In') do
+      tags 'Authentication' # <--- This groups it in the UI
+      consumes 'application/json'
+      produces 'application/json'
+
+      # Define the input parameter
+      parameter name: :user, in: :body, schema: {
+        type: :object,
+        properties: {
+          user: {
+            type: :object,
+            properties: {
+              email: { type: :string },
+              password: { type: :string }
+            },
+            required: %w[email password]
+          }
+        }
+      }
+
+      response(200, 'successful') do
+        # This captures the actual response from your API for the example
+        after do |example|
+          example.metadata[:response][:content] = {
+            'application/json' => {
+              example: JSON.parse(response.body, symbolize_names: true)
+            }
+          }
+        end
+        run_test!
+      end
+
+      response(401, 'unauthorized') do
+        run_test!
+      end
+    end
+  end
+
+
+  path '/api/v1/users/sign_up' do
+    post('Sign Up') do
+      tags 'Authentication'
+      consumes 'application/json'
+      produces 'application/json'
+
+      # Define the input parameter
+      parameter name: :user, in: :body, schema: {
+        type: :object,
+        properties: {
+          user: {
+            type: :object,
+            properties: {
+              username: { type: :string },
+              email: { type: :string, default: "string@string.string" },
+              password: { type: :string },
+              password_confirmation: { type: :string },
+              first_name: { type: :string },
+              last_name: { type: :string },
+              gender: { type: :integer, default: 1 },
+              dob: { type: :string, format: 'date', example: '2000-01-01' }
+            },
+            required: %w[username email password password_confirmation first_name last_name gender dob]
+          }
+        }
+      }
+
+      response(200, 'successful') do
+        # This captures the actual response from your API for the example
+        after do |example|
+          example.metadata[:response][:content] = {
+            'application/json' => {
+              example: JSON.parse(response.body, symbolize_names: true)
+            }
+          }
+        end
+        run_test!
+      end
+
+      response(401, 'unauthorized') do
+        run_test!
+      end
+    end
+  end
+  path '/api/v1/users/confirmation' do
+    get('Confirm Account') do
+      tags 'Authentication'
+      produces 'text/html'
+      parameter name: :confirmation_token, in: :query, type: :string, required: true
+
+      response(302, 'redirected') do
+        run_test!
+      end
+
+      response(422, 'invalid token') do
+        run_test!
+      end
+    end
+  end
+
+  path '/api/v1/users/sign_out' do
+    delete('Sign Out') do
+      tags 'Authentication'
+      security [ Bearer: [] ]
+
+      response(200, 'successful') do
+        let(:user) { User.create!(username: "test_signout_#{rand(999)}", email: "signout_#{rand(999)}@test.com", password: 'password', password_confirmation: 'password', first_name: 'Test', last_name: 'User', gender: 1, dob: '2000-01-01') }
+        let(:Authorization) { Devise::JWT::TestHelpers.auth_headers({}, user)['Authorization'] }
+        run_test!
+      end
+    end
+  end
+end

@@ -1,9 +1,170 @@
 ---
 openapi: 3.0.1
 info:
-  title: API V1
+  title: API Documentation
   version: v1
-paths: {}
+paths:
+  "/api/v1/users/sign_in":
+    post:
+      summary: Sign In
+      tags:
+      - Authentication
+      parameters: []
+      responses:
+        '200':
+          description: successful
+        '401':
+          description: unauthorized
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user:
+                  type: object
+                  properties:
+                    email:
+                      type: string
+                    password:
+                      type: string
+                  required:
+                  - email
+                  - password
+  "/api/v1/users/sign_up":
+    post:
+      summary: Sign Up
+      tags:
+      - Authentication
+      parameters: []
+      responses:
+        '200':
+          description: successful
+        '401':
+          description: unauthorized
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user:
+                  type: object
+                  properties:
+                    username:
+                      type: string
+                    email:
+                      type: string
+                      default: string@string.string
+                    password:
+                      type: string
+                    password_confirmation:
+                      type: string
+                    first_name:
+                      type: string
+                    last_name:
+                      type: string
+                    gender:
+                      type: integer
+                      default: 1
+                    dob:
+                      type: string
+                      format: date
+                      example: '2000-01-01'
+                  required:
+                  - username
+                  - email
+                  - password
+                  - password_confirmation
+                  - first_name
+                  - last_name
+                  - gender
+                  - dob
+  "/api/v1/users/confirmation":
+    get:
+      summary: Confirm Account
+      tags:
+      - Authentication
+      parameters:
+      - name: confirmation_token
+        in: query
+        required: true
+        schema:
+          type: string
+      responses:
+        '302':
+          description: redirected
+        '422':
+          description: invalid token
+  "/api/v1/users/sign_out":
+    delete:
+      summary: Sign Out
+      tags:
+      - Authentication
+      security:
+      - Bearer: []
+      responses:
+        '200':
+          description: successful
+  "/api/v1/profiles/host/{user_id}":
+    get:
+      summary: Get Profile by Host
+      tags:
+      - Profiles
+      parameters:
+      - name: user_id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: successful
+  "/api/v1/profiles/guest/{user_id}":
+    get:
+      summary: Get Profile by Guest
+      tags:
+      - Profiles
+      parameters:
+      - name: user_id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: successful
+  "/api/v1/users/me":
+    patch:
+      summary: Change User Langue
+      tags:
+      - Users
+      parameters: []
+      responses:
+        '200':
+          description: successful
+        '401':
+          description: unauthorized
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user:
+                  type: object
+                  properties:
+                    locale:
+                      type: string
+                  required:
+                  - locale
 servers:
 - url: http://localhost:3000
   description: API Server
+components:
+  securitySchemes:
+    Bearer:
+      description: JWT key necessary to use API calls
+      type: apiKey
+      name: Authorization
+      in: header
