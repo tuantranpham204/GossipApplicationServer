@@ -3,6 +3,59 @@
 module Api
   module V1
     class ProfileController < ApplicationController
+      def search
+        begin
+          query = params[:q].presence || "*"
+          @profiles = Profile.search(
+            query,
+            # Define which fields to search
+            fields: [
+              "username^10", # ^10 means matches on username are 10x more important
+              "full_name",   # Matches "John Doe"
+              "first_name",
+              "last_name",
+              "reversed_full_name"
+            ],
+            match: :word_start, # Enables partial matching ("joh" matches "john")
+            misspellings: { edit_distance: 1 }, # Optional: Handles typos ("Jhon")
+            page: params[:page],
+            per_page: params[:per_page]
+          )
+          authorize @profiles, :search?, policy_class: Api::V1::ProfilePolicy
+        rescue Pundit::NotAuthorizedError
+          raise AppError.new(ErrorCode::USER_UNPERMITTED)
+        end
+        json_pagination(
+          data:
+            @profiles.map do |profile|
+                {
+                    user_id: profile.user_id,
+                    username: profile.user.username,
+                    email: profile.is_email_public ? profile.user.email : nil,
+                    first_name: profile.first_name,
+                    last_name: profile.last_name,
+                    bio: profile.bio,
+                    dob: profile.dob,
+                    gender:  profile.is_gender_public ? profile.gender : nil,
+                    relationship_status: profile.is_rel_status_public ? profile.relationship_status : nil,
+                    status: profile.is_email_public ? profile.status : nil,
+                    avatar_data: {
+                      url: profile.avatar_data["url"]
+                    },
+                    is_email_public: profile.is_email_public,
+                    is_gender_public: profile.is_gender_public,
+                    is_rel_status_public: profile.is_rel_status_public
+                  }
+            end,
+          meta: {
+            total_pages: @profiles.total_pages,
+            total_count: @profiles.total_count,
+            current_page: @profiles.current_page,
+            per_page: @profiles.per_page
+          })
+      end
+
+
       # GET /profiles/avatar/:user_id
       def get_avatar
         begin
@@ -43,6 +96,11 @@ module Api
         begin
           @profile = Profile.find_by!(user_id: params[:user_id])
           authorize @profile, :get_by_guest?, policy_class: Api::V1::ProfilePolicy
+
+          # TODO: add these fields to profile table.
+          friends_amt = UserRelation.get_friends_amount(params[:user_id])
+          followers_amt = UserRelation.get_followers_amount(params[:user_id])
+          following_amt = UserRelation.get_following_amount(params[:user_id])
         rescue Pundit::NotAuthorizedError
           raise AppError.new(ErrorCode::USER_UNPERMITTED)
         rescue ActiveRecord::RecordNotFound
@@ -50,6 +108,9 @@ module Api
         end
         json_success(data: {
           user_id: @profile.user_id,
+          friends_amt: friends_amt,
+          followers_amt: followers_amt,
+          following_amt: following_amt,
           username: @profile.user.username,
           email: @profile.is_email_public ? @profile.user.email : nil,
           first_name: @profile.first_name,
@@ -60,7 +121,7 @@ module Api
           relationship_status: @profile.is_rel_status_public ? @profile.relationship_status : nil,
           status: @profile.is_email_public ? @profile.status : nil,
           avatar_data: {
-            url: @profile.avatar_data[:url]
+            url: @profile.avatar_data["url"]
           },
           is_email_public: @profile.is_email_public,
           is_gender_public: @profile.is_gender_public,

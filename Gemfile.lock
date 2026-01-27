@@ -130,6 +130,14 @@ GEM
       logger
       zeitwerk (~> 2.6)
     ed25519 (1.4.0)
+    elastic-transport (8.4.1)
+      faraday (< 3)
+      multi_json
+    elasticsearch (9.2.0)
+      elastic-transport (~> 8.3)
+      elasticsearch-api (= 9.2.0)
+    elasticsearch-api (9.2.0)
+      multi_json
     erb (6.0.1)
     erubi (1.13.1)
     et-orbi (1.4.0)
@@ -220,6 +228,7 @@ GEM
     minitest (6.0.1)
       prism (~> 1.5)
     msgpack (1.8.0)
+    multi_json (1.19.1)
     multi_xml (0.8.1)
       bigdecimal (>= 3.1, < 5)
     multipart-post (2.4.1)
@@ -437,6 +446,8 @@ GEM
     ruby-vips (2.3.0)
       ffi (~> 1.12)
       logger
+    searchkick (6.0.3)
+      activemodel (>= 7.2)
     securerandom (0.4.1)
     sidekiq (8.1.0)
       connection_pool (>= 3.0.0)
@@ -521,6 +532,7 @@ DEPENDENCIES
   devise
   devise-jwt
   dotenv-rails
+  elasticsearch
   image_processing (~> 1.2)
   jbuilder
   kamal
@@ -543,6 +555,7 @@ DEPENDENCIES
   rswag-specs
   rswag-ui
   rubocop-rails-omakase
+  searchkick
   sidekiq
   solid_cable
   solid_cache

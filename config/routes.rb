@@ -33,6 +33,8 @@ Rails.application.routes.draw do
       end
       resources :profiles, only: [] do
         collection do
+          get "search", to: "profile#search"
+
           get "host/:user_id", to: "profile#get_by_host"
           get "guest/:user_id", to: "profile#get_by_guest"
 

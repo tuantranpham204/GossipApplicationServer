@@ -50,6 +50,10 @@ gem 'pry-byebug'
 # Language
 gem 'rails-i18n'
 
+# Search (searchkick is a wrapper for elasticsearch)
+gem 'elasticsearch'
+gem 'searchkick'
+
 # Use the Puma web server [https://github.com/puma/puma]
 gem "puma", ">= 5.0"
 
