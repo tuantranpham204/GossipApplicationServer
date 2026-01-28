@@ -167,7 +167,6 @@ module Api
             data_uri = "data:#{raw_avatar_data.content_type};base64,#{encoded_image}"
             AvatarUploadJob.perform_later(@profile.user_id, data_uri)
           else
-            # Assume it's a string (e.g. from specs or other sources)
             AvatarUploadJob.perform_later(@profile.user_id, raw_avatar_data)
           end
         rescue Pundit::NotAuthorizedError
