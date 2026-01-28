@@ -1,6 +1,8 @@
 Rails.application.routes.draw do
   mount Rswag::Ui::Engine => "/api-docs"
   mount Rswag::Api::Engine => "/api-docs"
+  require "sidekiq/web"
+  mount Sidekiq::Web => "/sidekiq"
   # Ensure confirmation links hit our overridden controller
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

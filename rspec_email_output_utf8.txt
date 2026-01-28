@@ -1,0 +1,36 @@
+﻿bundle : 
+C:/Ruby34-x64/lib/ruby/3.4.0/win32/registry.rb:2: 
+warning: C:/Ruby34-x64/lib/ruby/3.4.0/fiddle/import.rb 
+is found in fiddle, which will no longer be part of the 
+default gems starting from Ruby 3.5.0.
+At line:1 char:1
++ bundle exec rspec 
+spec/requests/email_confirmation_spec.rb > rspec_em ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (C:/Ruby34-x 
+   64/l...rom Ruby 3.5.0.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+You can add fiddle to your Gemfile or gemspec to silence 
+this warning.
+DEPRECATION WARNING: resource received a hash argument 
+only. Please use a keyword instead. Support to hash 
+argument will be removed in Rails 8.2. (called from 
+block (3 levels) in <main> at 
+D:/PROJECTS/GossipApplicationServer/config/routes.rb:18)
+DEPRECATION WARNING: resource received a hash argument 
+path. Please use a keyword instead. Support to hash 
+argument will be removed in Rails 8.2. (called from 
+block (3 levels) in <main> at 
+D:/PROJECTS/GossipApplicationServer/config/routes.rb:18)
+DEPRECATION WARNING: resource received a hash argument 
+path_names. Please use a keyword instead. Support to 
+hash argument will be removed in Rails 8.2. (called from 
+block (3 levels) in <main> at 
+D:/PROJECTS/GossipApplicationServer/config/routes.rb:18)
+DEPRECATION WARNING: resource received a hash argument 
+controller. Please use a keyword instead. Support to 
+hash argument will be removed in Rails 8.2. (called from 
+block (3 levels) in <main> at 
+D:/PROJECTS/GossipApplicationServer/config/routes.rb:18)

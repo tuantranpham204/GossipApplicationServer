@@ -52,6 +52,12 @@ class User < ApplicationRecord
   validates :password, format: { with: VALID_PASSWORD_REGEX }, if: -> { Rails.env.production? }
 
 
+  # Override Devise's method to send emails asynchronously
+  def send_devise_notification(notification, *args)
+    devise_mailer.send(notification, self, *args).deliver_later
+  end
+
+
 
   # def self.from_omniauth(auth)
   #   where(provider: auth.provider, uid: auth.uid).first_or_create do |user|

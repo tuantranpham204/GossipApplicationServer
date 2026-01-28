@@ -144,7 +144,7 @@ module Api
         rescue ActiveRecord::RecordNotFound
           raise AppError.new(ErrorCode::RESOURCE_NOT_FOUND, params: { resource: { name: "Profile", attribute: "user id", id: params[:user_id] } })
         end
-        json_success(message: I18n.t("profile.updated"))
+        json_success(message: I18n.t("messages.profile_updated"))
       end
 
       # PATCH /profiles/avatar/:user_id
@@ -153,32 +153,27 @@ module Api
           @profile = Profile.find_by!(user_id: params[:user_id])
           raw_avatar_data = params[:raw_avatar_data]
 
+
           if raw_avatar_data.nil?
             raise AppError.new(ErrorCode::MISSING_PARAMETERS, params: { details: "Missing avatar image" })
           end
 
-          if @profile.avatar_data[:public_id]
-            Cloudinary::Api.delete_resources(@profile.avatar_data[:public_id])
-            new_avatar_data = Cloudinary::Uploader.upload(raw_avatar_data, folder: "profiles")
-            authorize @profile, :update_avatar?, policy_class: Api::V1::ProfilePolicy
-            @profile.update!(avatar_data: {
-              public_id: new_avatar_data["public_id"],
-              url: new_avatar_data["secure_url"]
-            })
+
+          authorize @profile, :update_avatar?, policy_class: Api::V1::ProfilePolicy
+
+          # Convert uploaded file to Base64 to pass to Sidekiq
+          if raw_avatar_data.respond_to?(:read)
+            encoded_image = Base64.strict_encode64(raw_avatar_data.read)
+            data_uri = "data:#{raw_avatar_data.content_type};base64,#{encoded_image}"
+            AvatarUploadJob.perform_later(@profile.user_id, data_uri)
           else
-            new_avatar_data = Cloudinary::Uploader.upload(raw_avatar_data, folder: "profiles")
-            authorize @profile, :update_avatar?, policy_class: Api::V1::ProfilePolicy
-            @profile.update!(avatar_data: {
-              public_id: new_avatar_data["public_id"],
-              url: new_avatar_data["secure_url"]
-            })
+            # Assume it's a string (e.g. from specs or other sources)
+            AvatarUploadJob.perform_later(@profile.user_id, raw_avatar_data)
           end
         rescue Pundit::NotAuthorizedError
           raise AppError.new(ErrorCode::USER_UNPERMITTED)
-        rescue ActiveRecord::RecordNotFound
-          raise AppError.new(ErrorCode::RESOURCE_NOT_FOUND, params: { resource_name: "Profile", resource_attribute: "user id", resource_value: params[:user_id] })
         end
-        json_success(message: I18n.t("profile.avatar_updated"))
+        json_success(message: "Avatar upload queued")
       end
     end
   end
