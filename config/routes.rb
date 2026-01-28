@@ -1,6 +1,8 @@
 Rails.application.routes.draw do
   mount Rswag::Ui::Engine => "/api-docs"
   mount Rswag::Api::Engine => "/api-docs"
+  require "sidekiq/web"
+  mount Sidekiq::Web => "/sidekiq"
   # Ensure confirmation links hit our overridden controller
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
@@ -24,16 +26,24 @@ Rails.application.routes.draw do
                    registrations: "users/registrations",
                    confirmations: "users/confirmations"
                    #  omniauth_callbacks: "users/omniauth_callbacks"
-                 }
+                 },
+                 defaults: { format: :json }
       resources :users, only: [] do
         collection do
-          patch "me", to: "users"
+          patch "me", to: "user#update_me"
         end
       end
       resources :profiles, only: [] do
         collection do
-          get "host/:user_id", to: "profiles#get_by_host"
-          get "guest/:user_id", to: "profiles#get_by_guest"
+          get "search", to: "profile#search"
+
+          get "host/:user_id", to: "profile#get_by_host"
+          get "guest/:user_id", to: "profile#get_by_guest"
+
+          patch "avatar/:user_id", to: "profile#update_avatar"
+          get "avatar/:user_id", to: "profile#get_avatar"
+
+          patch "update/:user_id", to: "profile#update"
         end
       end
     end

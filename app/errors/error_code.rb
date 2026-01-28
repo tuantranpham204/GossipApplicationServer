@@ -13,12 +13,17 @@ module ErrorCode
   UNAUTHORIZED = { code: 401, message: "errors.unauthorized", status: :unauthorized }
   TOKEN_EXPIRED = { code: 401, message: "errors.token_expired", status: :unauthorized }
   USERNAME_USED = { code: 401, message: "validation.input_username_again", status: :unauthorized }
-  SIGN_IN_FAILED = { code: 401, message: "validation.sign_in_failed", status: :unauthorized}
+  SIGN_IN_FAILED = { code: 401, message: "validation.sign_in_failed", status: :unauthorized }
 
+  # Forbidden Errors
+  FORBIDDEN = { code: 403, message: "errors.forbidden", status: :forbidden }
+  USER_UNPERMITTED = { code: 403, message: "errors.user_unpermitted", status: :forbidden }
 
+  # Resource Not Found Errors
   RESOURCE_NOT_FOUND = { code: 400, message: "errors.resource_not_found", status: :not_found }
   CANNOT_CREATE_RESOURCE = { code: 400, message: "errors.cannot_create_resource", status: :bad_request }
 
-
-
+  # Media Errors
+  MEDIA_UPLOAD_FAILED = { code: 500, message: "errors.media_upload_failed", status: :internal_server_error }
+  MEDIA_DELETE_FAILED = { code: 500, message: "errors.media_delete_failed", status: :internal_server_error }
 end

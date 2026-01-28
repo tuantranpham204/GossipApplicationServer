@@ -1,0 +1,68 @@
+﻿bundle : 
+C:/Ruby34-x64/lib/ruby/3.4.0/win32/registry.rb:2: 
+warning: C:/Ruby34-x64/lib/ruby/3.4.0/fiddle/import.rb 
+is found in fiddle, which will no longer be part of the 
+default gems starting from Ruby 3.5.0.
+At line:1 char:1
++ bundle exec rspec spec/jobs/avatar_upload_job_spec.rb 
+> rspec_job_out ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (C:/Ruby34-x 
+   64/l...rom Ruby 3.5.0.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+You can add fiddle to your Gemfile or gemspec to silence 
+this warning.
+DEPRECATION WARNING: resource received a hash argument 
+only. Please use a keyword instead. Support to hash 
+argument will be removed in Rails 8.2. (called from 
+block (3 levels) in <main> at 
+D:/PROJECTS/GossipApplicationServer/config/routes.rb:18)
+DEPRECATION WARNING: resource received a hash argument 
+path. Please use a keyword instead. Support to hash 
+argument will be removed in Rails 8.2. (called from 
+block (3 levels) in <main> at 
+D:/PROJECTS/GossipApplicationServer/config/routes.rb:18)
+DEPRECATION WARNING: resource received a hash argument 
+path_names. Please use a keyword instead. Support to 
+hash argument will be removed in Rails 8.2. (called from 
+block (3 levels) in <main> at 
+D:/PROJECTS/GossipApplicationServer/config/routes.rb:18)
+DEPRECATION WARNING: resource received a hash argument 
+controller. Please use a keyword instead. Support to 
+hash argument will be removed in Rails 8.2. (called from 
+block (3 levels) in <main> at 
+D:/PROJECTS/GossipApplicationServer/config/routes.rb:18)
+FF
+
+Failures:
+
+  1) AvatarUploadJob queues the job
+     Failure/Error: let(:user) { create(:user) }
+
+     NoMethodError:
+       undefined method 'create' for #<RSpec::ExampleGroups::AvatarUploadJob:0x00000124ecc115f8>
+     # ./spec/jobs/avatar_upload_job_spec.rb:6:in 'block (2 levels) in <top (required)>'
+     # ./spec/jobs/avatar_upload_job_spec.rb:7:in 'block (2 levels) in <top (required)>'
+     # C:/Users/12a1t/AppData/Local/Microsoft/WindowsApps/rspec:25:in 'Kernel#load'
+     # C:/Users/12a1t/AppData/Local/Microsoft/WindowsApps/rspec:25:in '<main>'
+
+  2) AvatarUploadJob uploads the avatar and updates the profile
+     Failure/Error: let(:user) { create(:user) }
+
+     NoMethodError:
+       undefined method 'create' for #<RSpec::ExampleGroups::AvatarUploadJob:0x00000124ec33d3f0>
+     # ./spec/jobs/avatar_upload_job_spec.rb:6:in 'block (2 levels) in <top (required)>'
+     # ./spec/jobs/avatar_upload_job_spec.rb:7:in 'block (2 levels) in <top (required)>'
+     # C:/Users/12a1t/AppData/Local/Microsoft/WindowsApps/rspec:25:in 'Kernel#load'
+     # C:/Users/12a1t/AppData/Local/Microsoft/WindowsApps/rspec:25:in '<main>'
+
+Finished in 0.03334 seconds (files took 6.09 seconds to load)
+2 examples, 2 failures
+
+Failed examples:
+
+rspec ./spec/jobs/avatar_upload_job_spec.rb:10 # AvatarUploadJob queues the job
+rspec ./spec/jobs/avatar_upload_job_spec.rb:18 # AvatarUploadJob uploads the avatar and updates the profile
+

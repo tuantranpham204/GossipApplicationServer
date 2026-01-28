@@ -41,10 +41,11 @@ module GossipApplication
 
 
     # Allow these locales (e.g., English and Vietnamese)
-    config.i18n.available_locales = [:en, :vi]
+    config.i18n.available_locales = [ :en, :vi ]
     # Set default locale
     config.i18n.default_locale = :en
     # Raise error if translation is missing (great for dev)
     config.i18n.fallbacks = true
+    config.active_job.queue_adapter = :sidekiq
   end
 end

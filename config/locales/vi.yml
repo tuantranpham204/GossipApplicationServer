@@ -1,6 +1,9 @@
-
 vi:
   hello: "Chào em cô gái Lam Hồng"
+
+  profile:
+    updated: "Cập nhật hồ sơ thành công."
+    avatar_updated: "Cập nhật ảnh đại diện thành công."
 
   locale:
     en: "Tiếng Anh"
@@ -11,8 +14,6 @@ vi:
     User: "Người dùng"
     attribute:
       language: "ngôn ngữ"
-
-
 
   messages:
     resource_updated: "%{resource.name} có thuộc tính %{resource.attribute} đã cap nhật thành công giá trị %{resource.value}"
@@ -26,13 +27,15 @@ vi:
     token_expired: "Token đã hết hạn."
     username_used: "%{username} đã được sử dụng. Vui lòng chọn tên khác."
 
-
     resource_not_found: "%{resource.name} với thuộc tính %{resource.attribute} không tồn tại giá trị %{resource.value}."
     cannot_create_resource: "Không thể tạo %{resource.name}."
 
     missing_param: "%{param} chưa được nhập liệu."
 
     user_inactive: "Người dùng không hoạt động."
+
+    forbidden: "Không được phép"
+    user_unpermitted: "Người dùng không được phép thực hiện hành động này."
 
   validation:
     validation_error: "Lỗi xác thực: %{details}"

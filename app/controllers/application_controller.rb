@@ -1,5 +1,6 @@
 class ApplicationController < ActionController::API
   include Pundit::Authorization
+  include Devise::Controllers::Helpers
   include ApiResponder
   include ErrorHandlers
   include ActionController::Flash
@@ -9,6 +10,17 @@ class ApplicationController < ActionController::API
   # Verify that 'authorize' was called for every action,
   # EXCEPT if it's a Devise controller (Login/Signup/Password Reset)
   after_action :verify_authorized, unless: :devise_controller?
+
+  # Devise is namespaced in config/routes.rb (namespace :api { namespace :v1 { devise_for :users } })
+  # So the helpers are current_api_v1_user and authenticate_api_v1_user!
+  # Pundit expects current_user, so we alias it.
+  def current_user
+    current_api_v1_user
+  end
+
+  def authenticate_user!
+    authenticate_api_v1_user!
+  end
 
   # def authenticate_request
   #   header = request.headers['Authorization']
@@ -27,7 +39,7 @@ class ApplicationController < ActionController::API
   # Removing the overridden devise_parameter_sanitizer because it was creating a new instance
   # every time, causing the configuration in RegistrationsController to be lost.
   # Devise provides a default implementation that works correctly.
-  
+
   # def devise_parameter_sanitizer
   #   if resource_class == User
   #     Devise::ParameterSanitizer.new(User, :user, params)

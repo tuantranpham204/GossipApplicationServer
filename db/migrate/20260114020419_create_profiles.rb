@@ -9,7 +9,7 @@ class CreateProfiles < ActiveRecord::Migration[8.1]
       t.integer :gender, null: false
       t.integer :relationship_status, null: false, default: 0
       t.integer :status, null: false, default: 1
-      t.jsonb :avatar_data, default: { public_id: nil, url: "../src/assets/defaultAvatar.jpg" }
+      t.jsonb :avatar_data, default: { public_id: nil, url: "https://i.pinimg.com/736x/cc/58/7b/cc587bf43e916ec9197c8842d675265c.jpg" }
 
       # Privacy setting attributes
       t.boolean :allow_direct_follows, null: false, default: true

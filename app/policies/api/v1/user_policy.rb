@@ -2,7 +2,7 @@
 
 module Api
   module V1
-    class UsersPolicy < ApplicationPolicy
+    class UserPolicy < ApplicationPolicy
       def update_me?
         true
       end
